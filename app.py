@@ -18,6 +18,8 @@ import streamlit as st
 import random
 import uuid
 from langchain_openai.chat_models.base import BaseChatOpenAI
+from langchain.callbacks.manager import CallbackManager
+from langchain.callbacks.tracers import LangChainTracer
 memory = MemorySaver()
 
 tracer = LangChainTracer(
