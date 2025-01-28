@@ -22,10 +22,7 @@ from langchain.callbacks.manager import CallbackManager
 from langchain.callbacks.tracers import LangChainTracer
 memory = MemorySaver()
 
-tracer = LangChainTracer(
-    project_name="chatbot-upleads"
-)
-callback_manager = CallbackManager([tracer])
+
 
 def scrape_agency_tool(agency_url: str) -> str:
     """
