@@ -8,3 +8,4 @@ graphviz
 curl_cffi
 bs4
 streamlit
+langsmith

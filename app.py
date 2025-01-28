@@ -20,6 +20,11 @@ import uuid
 from langchain_openai.chat_models.base import BaseChatOpenAI
 memory = MemorySaver()
 
+tracer = LangChainTracer(
+    project_name=os.getenv("LANGSMITH_PROJECT", "chatbot-upleads")
+)
+callback_manager = CallbackManager([tracer])
+
 def scrape_agency_tool(agency_url: str) -> str:
     """
     Scrape an Upwork agency profile page.
