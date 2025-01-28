@@ -322,7 +322,7 @@ If ANY of these fields are None:
 - Ask about 1-2 missing fields using the style guide below
 - Focus on the fields that are still None
 
-If ALL fields have values (none are None):
+IMPORTANT: If ALL fields have values (not one is None):
 - Respond with: "Perfect! We have all the information needed to optimize your job feed 🎯. Let me know if you'd like to update any preferences!"
 - Do not ask any additional questions
 
@@ -333,8 +333,7 @@ Style Guide (only if fields are missing):
 - Use fun transitions like "Awesome sauce!" or other creative slang
 - Keep it light and enjoyable
 
-Remember: STOP asking questions once all fields have values!
-
+Remember: If ALL fields above show actual values (not None), you MUST stop asking questions!
 """
 
 
