@@ -1,0 +1,10 @@
+load_dotenv
+langgraph
+langchain
+langchain-openai
+langchain-community
+langgraph-checkpoint-sqlite
+graphviz
+curl_cffi
+bs4
+streamlit
