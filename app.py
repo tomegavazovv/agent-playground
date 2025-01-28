@@ -535,6 +535,8 @@ def main():
     """, unsafe_allow_html=True)
 
     st.title("Upwork Agency Onboarding Assistant")
+    st.markdown("Don't try to break me, cause you probably will. Answer what I am asking")
+
     
     # Initialize session state
     if "messages" not in st.session_state:
