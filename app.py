@@ -246,10 +246,7 @@ Scraped Content in JSON format:
 
 1. If the data explicitly mentions or shows evidence of offering a service category = set that category to true
 2. If the profile doesn't mention or show any evidence of a service category = set that category to false
-3. If the data context suggests that the agency is senior level = set 'senior' to true
-4. If the data context suggests that the agency is mid level = set 'midLevel' to true
-5. If the data context suggests that the agency is entry level = set 'entryLevel' to true
-6. The experiece level should be easy to determine from the data context, so don't set it to None except you are totally unsure. Prefer to set it to true for senior.
+3. If the json object context even slightly suggests that the agency is senior level = set 'senior' to true, the same for mid. This should be nearly impossible to miss.
 
 Important: The absence of a service category in the profile should be interpreted as false, as agencies typically list all services they offer.
 
@@ -315,23 +312,29 @@ This is the current filter state we have configured for the agency's Upwork job 
 Most recent interactions for context:
 {last_interactions}
 
-IMPORTANT: These filters will determine which jobs appear in the agency's Upwork feed. If some filter fields are None, ask the user to specify their preferences. If all fields are set, confirm completion.
+FIRST STEP - Check if all fields have values:
+1. Check project_duration is not None
+2. Check average_client_spent is not None
+3. Check hourly_workload is not None
+4. Check is_it_a_company is not None
 
-When asking about filters:
-1. Frame questions as job feed preferences rather than general information
-2. Make it clear these settings will affect which jobs they see
-3. Use language that emphasizes these are feed customization options
+If ANY of these fields are None:
+- Ask about 1-2 missing fields using the style guide below
+- Focus on the fields that are still None
 
-Conversation Style:
-- Use short, friendly messages with a touch of humor to keep the user engaged
-- Guide the user step by step in setting up their ideal job feed
-- Clarify that these are preferences for filtering job listings
+If ALL fields have values (none are None):
+- Respond with: "Perfect! We have all the information needed to optimize your job feed 🎯. Let me know if you'd like to update any preferences!"
+- Do not ask any additional questions
 
-Example Questions:
-1. What's the minimum project duration you'd like to see in your job feed?
-2. What's the minimum average client spend you'd like to filter for?
-3. How many hours per week are you available for new projects?
-4. Do you prefer to see jobs from companies or individual clients in your feed?
+Style Guide (only if fields are missing):
+- Be concise and direct while maintaining a friendly tone
+- Frame questions as job feed preferences
+- Make it clear these settings will affect which jobs they see
+- Use fun transitions like "Awesome sauce!" or other creative slang
+- Keep it light and enjoyable
+
+Remember: STOP asking questions once all fields have values!
+
 """
 
 
@@ -472,6 +475,7 @@ class Agent:
 async def stream_response(state, config, response_placeholder, abot):
     response = ""
     was_tool_displayed = False
+    was_extraction_displayed = False
     async for event in abot.graph.astream_events(state, config, version="v2"):
         if event["event"] == "on_chat_model_stream":
             content = event["data"]["chunk"].content
@@ -483,6 +487,10 @@ async def stream_response(state, config, response_placeholder, abot):
                     response += "\n\nscraping agency...\n\n"
                     response_placeholder.markdown(response)
                     was_tool_displayed = True
+                if not was_extraction_displayed and event['name'] == 'extract_knowledge':
+                    response += "\n\nUpdating knowledge 🧠✨ ...\n\n If this takes too long, it is deepseek's fault, not mine. Sometimes they suck ☭ 🇨🇳\n\n"
+                    response_placeholder.markdown(response)
+                    was_extraction_displayed = True
             except:
                 pass
     return response
