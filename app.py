@@ -23,7 +23,7 @@ from langchain.callbacks.tracers import LangChainTracer
 memory = MemorySaver()
 
 tracer = LangChainTracer(
-    project_name=os.getenv("LANGSMITH_PROJECT", "chatbot-upleads")
+    project_name="chatbot-upleads"
 )
 callback_manager = CallbackManager([tracer])
 
