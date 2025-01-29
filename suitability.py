@@ -1,4 +1,5 @@
 import streamlit as st
+import logging
 from langchain_openai.chat_models.base import BaseChatOpenAI
 from langchain_openai import ChatOpenAI
 from langchain.prompts import PromptTemplate
@@ -11,13 +12,18 @@ from langchain_openai.chat_models.base import BaseChatOpenAI
 from langchain_openai import ChatOpenAI
 from utils.get_model import get_model, available_models
 
+# Set up logging
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 def create_streamlit_app():
+    logger.info("Starting Streamlit app")
     st.set_page_config(layout="wide")
 
     # Initialize session state variables
     if 'job_offset' not in st.session_state:
         st.session_state.job_offset = 0
+        logger.info("Initialized job_offset")
     if 'loaded_jobs' not in st.session_state:
         st.session_state.loaded_jobs = []
     if 'selected_model' not in st.session_state:
@@ -87,7 +93,9 @@ def create_streamlit_app():
         with st.container(key='jobs-container'):
             
             # Fetch new jobs and append to existing ones
+            logger.info(f"Fetching jobs with offset {st.session_state.job_offset}")
             new_jobs = get_jobs(offset=st.session_state.job_offset)
+            logger.info(f"Fetched {len(new_jobs)} new jobs")
             if not st.session_state.loaded_jobs or st.session_state.job_offset == 0:
                 st.session_state.loaded_jobs = new_jobs
             
@@ -103,8 +111,10 @@ def create_streamlit_app():
                     
                     # Add an analyze button
                     if st.button(f"Analyze Suitability", key=f"analyze_{job['title']}"):
+                        logger.info(f"Analyzing suitability for job: {job['title']}")
                         with st.spinner("Analyzing job suitability..."):
                             # Get the selected model and create suitability agent
+                            logger.info(f"Using model: {st.session_state.selected_model}")
                             model = get_model(st.session_state.selected_model)
                             suitability_agent = model.with_structured_output(SuitabilityRating)
                             
