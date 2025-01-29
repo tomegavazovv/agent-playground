@@ -1,8 +1,13 @@
 from google.cloud import firestore
 from utils.flatten_dict import flatten_dict
 import streamlit as st
+from dotenv import load_dotenv
+import os
+import json
 
-credentials_dict = st.secrets['gcp_service_account']
+load_dotenv()
+
+credentials_dict = json.loads(os.getenv('GOOGLE_CREDENTIALS'))
 db = firestore.Client().from_service_account_info(credentials_dict)
 
 def get_jobs(limit=10, offset=0):
